@@ -94,6 +94,15 @@ class TestPlanPrefetch:
         requests = strategy.plan_prefetch(view)
         assert len(requests) == 1
 
+    def test_confidence_scales_prefetch_budget(self) -> None:
+        # Doc section 6: window budget x confidence.
+        # Budget = floor(0.05 / 0.0018) = 27 blocks; selector knows b1..b3.
+        high, _ = self._warmed_strategy([("B", 1.0)])
+        low, _ = self._warmed_strategy([("B", 0.1)])
+        view = make_view(step=2, current_agent="A", blocks=BLOCKS)
+        assert len(high.plan_prefetch(view)) == 3   # 27 x 1.0 -> all known blocks
+        assert len(low.plan_prefetch(view)) == 2    # 27 x 0.1 -> floor(2.7) = 2 blocks
+
     def test_top_k_split_proportional_to_probability(self) -> None:
         # min(window budget 27, max_prefetch_blocks 5) = 5 blocks.
         # p(B)=0.6, p(C)=0.4 -> quotas 3 and 2 (largest remainder).

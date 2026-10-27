@@ -121,12 +121,16 @@ class PredictivePrefetchStrategy:
         if budget <= 0 or not selected:
             return []
 
-        # Split the block budget across predicted agents proportional to
-        # predicted probability (largest-remainder apportionment).
+        # Confidence-aware budget: the window budget is scaled by the summed
+        # prediction confidence, then split across predicted agents proportional
+        # to their probability (largest-remainder apportionment). High confidence
+        # means close to the full window is used; low confidence prefetches
+        # fewer blocks so memory and bandwidth are not wasted.
         total_prob = sum(prob for _, prob in selected)
-        exact = [(agent, prob, budget * prob / total_prob) for agent, prob in selected]
+        effective_budget = budget * total_prob
+        exact = [(agent, prob, effective_budget * prob / total_prob) for agent, prob in selected]
         quotas: dict[AgentId, int] = {agent: int(math.floor(share)) for agent, _, share in exact}
-        leftovers = budget - sum(quotas.values())
+        leftovers = max(0, int(math.floor(effective_budget + 1e-9)) - sum(quotas.values()))
         by_fraction = sorted(exact, key=lambda t: (-(t[2] - math.floor(t[2])), t[0]))
         for i in range(leftovers):
             quotas[by_fraction[i % len(by_fraction)][0]] += 1
