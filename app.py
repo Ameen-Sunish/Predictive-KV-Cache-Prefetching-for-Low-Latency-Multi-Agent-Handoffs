@@ -8,6 +8,7 @@ and a clairvoyant oracle.
 from __future__ import annotations
 
 import io
+import math
 from typing import Dict, List, Tuple
 
 import pandas as pd
@@ -413,16 +414,40 @@ with tab_timeline:
 
     df_timeline = pd.DataFrame(timeline_data)
 
+    # Recompute is orders of magnitude costlier than the caching strategies, so a
+    # linear y-axis crushes every other curve into the axis. Use a log y-axis, and
+    # floor exactly-zero latencies (Oracle / steady-state prefetch) below any real
+    # value so those lines can be drawn at all, with a padded range that keeps them
+    # off the axis border.
+    CUM_FLOOR_S = 1e-4
+    STEP_FLOOR_MS = 1e-3
+    df_timeline["Cumulative Plot (s)"] = df_timeline["Cumulative Latency (s)"].clip(lower=CUM_FLOOR_S)
+    df_timeline["Step Plot (ms)"] = df_timeline["Step Latency (ms)"].clip(lower=STEP_FLOOR_MS)
+    cum_range = [
+        math.log10(df_timeline["Cumulative Plot (s)"].min()) - 0.3,
+        math.log10(df_timeline["Cumulative Plot (s)"].max()) + 0.3,
+    ]
+    step_range = [
+        math.log10(df_timeline["Step Plot (ms)"].min()) - 0.3,
+        math.log10(df_timeline["Step Plot (ms)"].max()) + 0.3,
+    ]
+
     fig_cum = px.line(
         df_timeline,
         x="Step",
-        y="Cumulative Latency (s)",
+        y="Cumulative Plot (s)",
         color="Strategy",
         color_discrete_map=STRATEGY_COLORS,
-        title="Cumulative Handoff Latency over Simulation Steps",
-        hover_data=["Handoff", "Hits", "Misses"],
+        title="Cumulative Handoff Latency over Simulation Steps (Log-Scale)",
+        hover_data={
+            "Cumulative Plot (s)": False,
+            "Cumulative Latency (s)": ":.6f",
+            "Handoff": True,
+            "Hits": True,
+            "Misses": True,
+        },
     )
-    fig_cum.update_layout(height=480)
+    fig_cum.update_layout(height=480, yaxis_type="log", yaxis_range=cum_range)
     st.plotly_chart(fig_cum, width="stretch")
 
     # Per-step Latency distribution (log-scale box plot or instant latency)
@@ -430,13 +455,22 @@ with tab_timeline:
     fig_step = px.line(
         df_timeline,
         x="Step",
-        y="Step Latency (ms)",
+        y="Step Plot (ms)",
         color="Strategy",
         color_discrete_map=STRATEGY_COLORS,
-        title="Per-Handoff Latency (ms)",
+        title="Per-Handoff Latency (ms, Log-Scale)",
+        hover_data={
+            "Step Plot (ms)": False,
+            "Step Latency (ms)": ":.4f",
+            "Handoff": True,
+        },
     )
-    fig_step.update_layout(height=350)
+    fig_step.update_layout(height=350, yaxis_type="log", yaxis_range=step_range)
     st.plotly_chart(fig_step, width="stretch")
+    st.caption(
+        "Log-scale y-axis. Strategies sitting exactly at 0 s / 0 ms (Oracle prefetch, "
+        "steady-state Markov prefetch) are drawn at the axis floor so they stay visible."
+    )
 
 # -----------------------------------------------------------------------------
 # Tab 3: Step-by-Step Inspector
