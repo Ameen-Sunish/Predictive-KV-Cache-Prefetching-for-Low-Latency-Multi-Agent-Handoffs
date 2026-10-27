@@ -290,13 +290,12 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 # Tabs Layout
 # -----------------------------------------------------------------------------
-tab_benchmark, tab_timeline, tab_inspector, tab_sweeps, tab_theory = st.tabs(
+tab_benchmark, tab_timeline, tab_inspector, tab_sweeps = st.tabs(
     [
         "Strategy Benchmark",
         "Latency Timeline",
         "Step-by-Step Inspector",
         "Sensitivity Sweeps",
-        "OS Analogy Guide",
     ]
 )
 
@@ -614,53 +613,3 @@ with tab_sweeps:
         )
         fig_sw.update_layout(height=450)
         st.plotly_chart(fig_sw, width="stretch")
-
-# -----------------------------------------------------------------------------
-# Tab 5: OS Analogy & Review Guide
-# -----------------------------------------------------------------------------
-with tab_theory:
-    st.subheader("OS Virtual Memory Analogy & Core Principles")
-    st.markdown(
-        """
-        TeleportCache maps modern **LLM multi-agent pipelines** directly onto classic **Operating System virtual memory**:
-        """
-    )
-
-    analogy_table = pd.DataFrame(
-        [
-            {"Classic OS Virtual Memory": "Process", "TeleportCache Multi-Agent System": "Individual Agent (Planner, Coder, etc.)"},
-            {"Classic OS Virtual Memory": "Physical Memory Frames", "TeleportCache Multi-Agent System": "Agent's KV Scratchpad (capacity_blocks)"},
-            {"Classic OS Virtual Memory": "Virtual Memory Page", "TeleportCache Multi-Agent System": "KV Block (fixed-size paged tensor)"},
-            {"Classic OS Virtual Memory": "Page Reference String", "TeleportCache Multi-Agent System": "Ordered sequence of HandoffEvents"},
-            {"Classic OS Virtual Memory": "Page Fault", "TeleportCache Multi-Agent System": "Cache miss at handoff (transfer / recompute)"},
-            {"Classic OS Virtual Memory": "Swap-in over Disk/Bus", "TeleportCache Multi-Agent System": "KV block transfer over interconnect"},
-            {"Classic OS Virtual Memory": "Re-execute instruction", "TeleportCache Multi-Agent System": "Prefill KV from raw prompt tokens (recompute)"},
-            {"Classic OS Virtual Memory": "Page Replacement (LRU / FIFO)", "TeleportCache Multi-Agent System": "Scratchpad eviction policy on overflow"},
-            {"Classic OS Virtual Memory": "Hardware Data Prefetcher", "TeleportCache Multi-Agent System": "Predictive prefetch strategy"},
-            {"Classic OS Virtual Memory": "Denning's Working Set Model", "TeleportCache Multi-Agent System": "BlockSelector decayed working-set ranking"},
-            {"Classic OS Virtual Memory": "Bélády's Clairvoyant Optimal (OPT)", "TeleportCache Multi-Agent System": "OraclePrefetchStrategy (clairvoyant upper bound)"},
-        ]
-    )
-    st.table(analogy_table)
-
-    st.markdown("### Key Architectural Insights")
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown(
-            """
-            #### 1. Why Latency Disappears
-            At every multi-agent handoff, between when Agent A finishes emitting tokens and Agent B initializes its prompt,
-            there is an idle transition window ($T_{\\text{window}} \\approx 20\\text{--}80\\text{ ms}$).
-            
-            By predicting *who runs next* and *what pages they need*, TeleportCache moves KV pages across the interconnect
-            **during the idle window**, masking the bus latency completely behind background I/O.
-            """
-        )
-    with c2:
-        st.markdown(
-            """
-            #### 2. Dual-Layer Prediction
-            - **Next-Agent Predictor:** Markov chain ($n$-grams with backoff) or frequency counting predicts target agent probability distribution $P(\\text{Next} \\mid \\text{History})$.
-            - **BlockSelector Working-Set Estimation:** Scores candidate blocks via exponential recency decay $0.5^{\\text{age} / \\lambda}$ and adds a $2\\times$ boost for persistent blocks (e.g., system prompts / tool definitions) used in $\\ge 80\\%$ of visits.
-            """
-        )
