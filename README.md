@@ -9,7 +9,7 @@ An operating-system-inspired memory management runtime that eliminates LLM multi
 
 ---
 
-## 📌 Project Overview & Review Submissions
+## Project Overview & Review Submissions
 
 In multi-agent LLM systems (e.g. software engineering workflows, collaborative research pipelines, and agent DAGs), frequent context switching between agents causes substantial latency stalls:
 1. **Recompute Baseline (No Cache):** The receiving agent recomputes the entire prompt context from tokens on each transition, incurring $O(N)$ prefill GPU compute latency.
@@ -17,11 +17,11 @@ In multi-agent LLM systems (e.g. software engineering workflows, collaborative r
 
 **TeleportCache** solves this problem by predicting the next agent transition using **Markov models with backoff**, scoring required KV blocks with **exponential recency decay**, and speculatively prefetching blocks over the bus into the target agent's resident cache during the inter-agent transition window ($T_{\text{window}}$), **reducing handoff latency by 88.0%** and **eliminating >99.9% of prefill compute stalls**.
 
-> 📄 **Review-2 Submission Document:** See [REVIEW_2_IMPLEMENTATION_DETAILS.md](REVIEW_2_IMPLEMENTATION_DETAILS.md) and [REVIEW_2_IMPLEMENTATION_DETAILS.pdf](REVIEW_2_IMPLEMENTATION_DETAILS.pdf).
+> **Review-2 Submission Document:** See [REVIEW_2_IMPLEMENTATION_DETAILS.md](REVIEW_2_IMPLEMENTATION_DETAILS.md) and [REVIEW_2_IMPLEMENTATION_DETAILS.pdf](REVIEW_2_IMPLEMENTATION_DETAILS.pdf).
 
 ---
 
-## ⚙️ Technology Stack & Dependencies
+## Technology Stack & Dependencies
 
 - **Language:** Python `>= 3.10` (Static Typing, PEP 585/604, Protocols PEP 544, Dataclasses)
 - **Math & Distribution:** NumPy, Python Math
@@ -33,7 +33,7 @@ In multi-agent LLM systems (e.g. software engineering workflows, collaborative r
 
 ---
 
-## 🏗️ Architecture & Modules
+## Architecture & Modules
 
 ```
 teleportcache/
@@ -52,7 +52,7 @@ teleportcache/
 
 ---
 
-## 🚀 Quickstart & Reproduction
+## Quickstart & Reproduction
 
 ### 1. Installation
 Clone the repository and install dependencies:
@@ -83,7 +83,7 @@ Builds `REVIEW_2_IMPLEMENTATION_DETAILS.pdf`.
 
 ---
 
-## 📊 Benchmark Results
+## Benchmark Results
 
 Evaluated on a 50-step multi-agent cyclic workload:
 
@@ -99,7 +99,7 @@ Evaluated on a 50-step multi-agent cyclic workload:
 
 ---
 
-## 👥 Course & Evaluation Details
+## Course & Evaluation Details
 
 - **Course Faculty / Reviewer:** Dr. V. Ezhil Arasi
 - **Repository:** [https://github.com/Eldo-John-Giby/Predictive-KV-Cache-Prefetching-for-Low-Latency-Multi-Agent-Handoffs](https://github.com/Eldo-John-Giby/Predictive-KV-Cache-Prefetching-for-Low-Latency-Multi-Agent-Handoffs)

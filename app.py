@@ -39,7 +39,6 @@ from teleportcache.workloads.generators import (
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="TeleportCache Dashboard",
-    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -116,9 +115,9 @@ def create_strategies(selected: List[str], workload: Workload) -> Dict[str, Stra
 # -----------------------------------------------------------------------------
 # Sidebar: Configuration
 # -----------------------------------------------------------------------------
-st.sidebar.markdown("## ⚙️ Simulation Controls")
+st.sidebar.markdown("## Simulation Controls")
 
-with st.sidebar.expander("🖥️ Hardware & Cost Model (SimConfig)", expanded=True):
+with st.sidebar.expander("Hardware & Cost Model (SimConfig)", expanded=True):
     col_cfg1, col_cfg2 = st.columns(2)
     with col_cfg1:
         capacity_blocks = st.slider("Cache Capacity (Blocks)", min_value=2, max_value=32, value=4, step=1)
@@ -139,13 +138,13 @@ sim_config = SimConfig(
     eviction_policy=str(eviction_policy),
 )
 
-with st.sidebar.expander("🔀 Multi-Agent Workload", expanded=True):
+with st.sidebar.expander("Multi-Agent Workload", expanded=True):
     workload_type = st.selectbox(
         "Workload Topology",
         options=[
-            "Cyclic Pipeline (Canonical A ➔ B ➔ C ➔ A)",
-            "Hub & Spoke (Orchestrator ➔ Workers)",
-            "Branching Team (Planner ➔ Coder ➔ Reviewer ➔ Tester)",
+            "Cyclic Pipeline (Canonical A → B → C → A)",
+            "Hub & Spoke (Orchestrator → Workers)",
+            "Branching Team (Planner → Coder → Reviewer → Tester)",
             "Adversarial (Stochastic Transitions)",
         ],
         index=0,
@@ -154,7 +153,7 @@ with st.sidebar.expander("🔀 Multi-Agent Workload", expanded=True):
     blocks_per_agent = st.slider("Blocks per Handoff", min_value=2, max_value=12, value=4, step=1)
     random_seed = st.number_input("RNG Seed", value=42, step=1)
 
-with st.sidebar.expander("🧠 Strategies to Benchmark", expanded=True):
+with st.sidebar.expander("Strategies to Benchmark", expanded=True):
     all_strategies = list(STRATEGY_COLORS.keys())
     selected_strategies = st.multiselect(
         "Select strategies:",
@@ -198,7 +197,7 @@ for name, strat in strategies.items():
 # -----------------------------------------------------------------------------
 # Main Header
 # -----------------------------------------------------------------------------
-st.markdown('<div class="main-header">⚡ TeleportCache: Multi-Agent KV-Cache Prefetcher</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">TeleportCache: Multi-Agent KV-Cache Prefetcher</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="sub-header">'
     'Eliminating LLM multi-agent handoff latency by <b>predicting upcoming agents</b> '
@@ -293,11 +292,11 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 tab_benchmark, tab_timeline, tab_inspector, tab_sweeps, tab_theory = st.tabs(
     [
-        "📊 Strategy Benchmark",
-        "📈 Latency Timeline",
-        "🔍 Step-by-Step Inspector",
-        "🔬 Sensitivity Sweeps",
-        "💡 OS Analogy Guide",
+        "Strategy Benchmark",
+        "Latency Timeline",
+        "Step-by-Step Inspector",
+        "Sensitivity Sweeps",
+        "OS Analogy Guide",
     ]
 )
 
@@ -341,7 +340,7 @@ with tab_benchmark:
         st.plotly_chart(fig_hits, width="stretch")
 
     # Prefetch Utilization and Waste Breakdown
-    st.markdown("#### 📦 Prefetch Efficiency & I/O Breakdown")
+    st.markdown("#### Prefetch Efficiency & I/O Breakdown")
     col_pref1, col_pref2 = st.columns([1, 1])
 
     with col_pref1:
@@ -373,13 +372,13 @@ with tab_benchmark:
         st.plotly_chart(fig_data, width="stretch")
 
     # Detailed Table and CSV download
-    st.markdown("#### 📋 Detailed Metrics Table")
+    st.markdown("#### Detailed Metrics Table")
     st.dataframe(df_summary, width="stretch")
 
     csv_buf = io.StringIO()
     df_summary.to_csv(csv_buf, index=False)
     st.download_button(
-        label="📥 Download Benchmark Results (CSV)",
+        label="Download Benchmark Results (CSV)",
         data=csv_buf.getvalue(),
         file_name=f"teleportcache_benchmark_{workload.name}.csv",
         mime="text/csv",
@@ -407,7 +406,7 @@ with tab_timeline:
                     "Cumulative Latency (s)": cum_lat,
                     "Step Latency (ms)": h.latency_s * 1000.0,
                     "Strategy": strat_name,
-                    "Handoff": f"{h.from_agent} ➔ {h.to_agent}",
+                    "Handoff": f"{h.from_agent} → {h.to_agent}",
                     "Hits": h.hits,
                     "Misses": h.misses,
                 }
@@ -428,7 +427,7 @@ with tab_timeline:
     st.plotly_chart(fig_cum, width="stretch")
 
     # Per-step Latency distribution (log-scale box plot or instant latency)
-    st.markdown("#### ⚡ Instantaneous Step Latency (ms)")
+    st.markdown("#### Instantaneous Step Latency (ms)")
     fig_step = px.line(
         df_timeline,
         x="Step",
@@ -452,7 +451,7 @@ with tab_inspector:
     # Event details
     current_event = workload.events[step_idx]
     st.info(
-        f"**Step {step_idx}**: Handoff from **Agent `{current_event.from_agent}`** ➔ "
+        f"**Step {step_idx}**: Handoff from **Agent `{current_event.from_agent}`** → "
         f"**Agent `{current_event.to_agent}`** | "
         f"Required KV Blocks ({len(current_event.required_blocks)}): `{', '.join(current_event.required_blocks)}`"
     )
@@ -480,7 +479,7 @@ with tab_inspector:
     # Visualizing Handoff State
     col_s1, col_s2 = st.columns(2)
     with col_s1:
-        st.markdown(f"#### 🧠 Target Agent `{current_event.to_agent}` Demand Resolution")
+        st.markdown(f"#### Target Agent `{current_event.to_agent}` Demand Resolution")
         fig_hit_miss = go.Figure(
             data=[
                 go.Bar(name="Hits", x=df_step["Strategy"], y=df_step["Hits"], marker_color="#2ecc71"),
@@ -491,7 +490,7 @@ with tab_inspector:
         st.plotly_chart(fig_hit_miss, width="stretch")
 
     with col_s2:
-        st.markdown(f"#### ⏱️ Step Latency (ms)")
+        st.markdown(f"#### Step Latency (ms)")
         fig_step_lat = px.bar(
             df_step,
             x="Strategy",
@@ -509,7 +508,7 @@ with tab_inspector:
 # Tab 4: Sensitivity Sweeps ("What-If" Analysis)
 # -----------------------------------------------------------------------------
 with tab_sweeps:
-    st.subheader("🔬 Parameter Sensitivity Sweeps")
+    st.subheader("Parameter Sensitivity Sweeps")
     st.markdown(
         "Conduct live sensitivity sweeps to analyze where predictive prefetching provides "
         "the highest return on investment and how hardware constraints impact latency."
@@ -620,7 +619,7 @@ with tab_sweeps:
 # Tab 5: OS Analogy & Review Guide
 # -----------------------------------------------------------------------------
 with tab_theory:
-    st.subheader("💡 OS Virtual Memory Analogy & Core Principles")
+    st.subheader("OS Virtual Memory Analogy & Core Principles")
     st.markdown(
         """
         TeleportCache maps modern **LLM multi-agent pipelines** directly onto classic **Operating System virtual memory**:
@@ -644,7 +643,7 @@ with tab_theory:
     )
     st.table(analogy_table)
 
-    st.markdown("### 🔑 Key Architectural Insights")
+    st.markdown("### Key Architectural Insights")
     c1, c2 = st.columns(2)
     with c1:
         st.markdown(

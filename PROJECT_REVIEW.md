@@ -407,21 +407,21 @@ The team is **exactly 3 members: Eldo, Steve, Ameen** (evidenced directly in the
 
 | # | Task / deliverable | Owner | Status | Evidence in repo |
 | :--- | :--- | :--- | :--- | :--- |
-| 1 | **Frozen contract `types.py`** (dataclasses, `SimConfig`, `PolicyView`, `Strategy`/`Predictor` protocols) | **Eldo** | ✅ Done | commit `836da85`; "Owned by Eldo" docstring |
-| 2 | Repo scaffold, packaging (`pyproject.toml`, `requirements.txt`, `.gitignore`), test-package skeletons | **Eldo** | ✅ Done | commit `836da85` |
-| 3 | **Page-cache MMU** (`cache.py`: `AgentCache`, LRU/FIFO via `OrderedDict`, useful/wasted prefetch flag) | **Eldo** | ✅ Done | commit `082e75a` + 9 tests |
-| 4 | **Cost/latency model** (`cost_model.py`: transfer/recompute/budget formulas) | **Eldo** | ✅ Done | commit `082e75a` + 4 tests |
-| 5 | **Baselines** (`baselines.py`: `RecomputeStrategy`, `TransferOnDemandStrategy`) | **Eldo** | ✅ Done | commit `082e75a` + 2 tests |
-| 6 | **Simulation engine** (`simulator.py`: causal-isolation `PolicyView`, prefetch-window enforcement, demand paging, waste attribution, workload validation) | **Eldo** | ✅ Done | commit `082e75a` + 8 tests |
-| 7 | **CI pipeline** (`.github/workflows/ci.yml`, Python 3.10/3.11/3.12 matrix) | **Eldo** | ✅ Done | commit `082e75a` |
-| 8 | **Next-agent predictors** (`predictors.py`: Frequency w/ Laplace smoothing, Markov-k w/ backoff, Random, NoisyOracle) | **Steve** | ✅ Done | commit `ebb42b1` + 19 tests |
-| 9 | **Block selector / working-set estimator** (`block_selector.py`: recency-decay scoring + boost) | **Steve** | ✅ Done | commit `ebb42b1` + 8 tests |
-| 10 | **`PredictivePrefetchStrategy`** (top-k selection, largest-remainder budget split, prob×score merge, accuracy stats) — *the main contribution* | **Steve** | ✅ Done | commit `ebb42b1` + 16 tests |
-| 11 | **Oracle upper bound** (`oracle.py`: clairvoyant, smallest-first packing) | **Steve** | ✅ Done | commit `ebb42b1` + 7 tests |
-| 12 | **Prediction test suite + end-to-end integration suite vs Eldo's simulator** (10 theorem-style tests incl. determinism) | **Steve** | ✅ Done | commit `ebb42b1` |
-| 13 | Review-2 writeup: `REVIEW_2_IMPLEMENTATION_DETAILS.{md,pdf}`, `README.md`, `generate_pdf_report.py`, `run_demo.py`, `benchmark_results.png` | Eldo + Steve (joint) | ✅ Done (on `main`, commit `17a8ee5`) | docs commit; currently **not** merged into `steve/prediction` |
-| 14 | `workloads/` workload generators (cyclic/skewed/random schedules) | **Ameen** | ⏳ In progress | package scaffold exists; `test_prediction_integration.py` docstring + `importorskip` reference it |
-| 15 | `experiments/` sweep harness + matplotlib figures | **Ameen** | ⏳ In progress | package scaffold exists, empty |
+| 1 | **Frozen contract `types.py`** (dataclasses, `SimConfig`, `PolicyView`, `Strategy`/`Predictor` protocols) | **Eldo** | Done | commit `836da85`; "Owned by Eldo" docstring |
+| 2 | Repo scaffold, packaging (`pyproject.toml`, `requirements.txt`, `.gitignore`), test-package skeletons | **Eldo** | Done | commit `836da85` |
+| 3 | **Page-cache MMU** (`cache.py`: `AgentCache`, LRU/FIFO via `OrderedDict`, useful/wasted prefetch flag) | **Eldo** | Done | commit `082e75a` + 9 tests |
+| 4 | **Cost/latency model** (`cost_model.py`: transfer/recompute/budget formulas) | **Eldo** | Done | commit `082e75a` + 4 tests |
+| 5 | **Baselines** (`baselines.py`: `RecomputeStrategy`, `TransferOnDemandStrategy`) | **Eldo** | Done | commit `082e75a` + 2 tests |
+| 6 | **Simulation engine** (`simulator.py`: causal-isolation `PolicyView`, prefetch-window enforcement, demand paging, waste attribution, workload validation) | **Eldo** | Done | commit `082e75a` + 8 tests |
+| 7 | **CI pipeline** (`.github/workflows/ci.yml`, Python 3.10/3.11/3.12 matrix) | **Eldo** | Done | commit `082e75a` |
+| 8 | **Next-agent predictors** (`predictors.py`: Frequency w/ Laplace smoothing, Markov-k w/ backoff, Random, NoisyOracle) | **Steve** | Done | commit `ebb42b1` + 19 tests |
+| 9 | **Block selector / working-set estimator** (`block_selector.py`: recency-decay scoring + boost) | **Steve** | Done | commit `ebb42b1` + 8 tests |
+| 10 | **`PredictivePrefetchStrategy`** (top-k selection, largest-remainder budget split, prob×score merge, accuracy stats) — *the main contribution* | **Steve** | Done | commit `ebb42b1` + 16 tests |
+| 11 | **Oracle upper bound** (`oracle.py`: clairvoyant, smallest-first packing) | **Steve** | Done | commit `ebb42b1` + 7 tests |
+| 12 | **Prediction test suite + end-to-end integration suite vs Eldo's simulator** (10 theorem-style tests incl. determinism) | **Steve** | Done | commit `ebb42b1` |
+| 13 | Review-2 writeup: `REVIEW_2_IMPLEMENTATION_DETAILS.{md,pdf}`, `README.md`, `generate_pdf_report.py`, `run_demo.py`, `benchmark_results.png` | Eldo + Steve (joint) | Done (on `main`, commit `17a8ee5`) | docs commit; currently **not** merged into `steve/prediction` |
+| 14 | `workloads/` workload generators (cyclic/skewed/random schedules) | **Ameen** | In progress | package scaffold exists; `test_prediction_integration.py` docstring + `importorskip` reference it |
+| 15 | `experiments/` sweep harness + matplotlib figures | **Ameen** | In progress | package scaffold exists, empty |
 
 ### 11.2 Remaining Review-3 tasks, distributed
 
